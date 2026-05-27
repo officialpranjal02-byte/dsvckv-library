@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSVCKV Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        /* --- PAGE 1: HOME PAGE --- */
+        .home-page {
+            height: 100vh;
+            width: 100vw;
+            /* यहाँ आप अपनी लाइब्रेरी वाली इमेज का लिंक डाल सकते हैं */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1920') no-repeat center center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .home-page h1 {
+            color: white;
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .tour-btn {
+            background-color: #b31010;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .tour-btn:hover {
+            background-color: #d61c1c;
+            transform: scale(1.05);
+        }
+
+        /* --- PAGE 2: SUBJECT SELECTION --- */
+        .subjects-page {
+            display: none; /* शुरुआत में छुपा रहेगा */
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #eaeaea;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .subjects-page h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 50px;
+        }
+
+        .card-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+        }
+
+        .card {
+            width: 280px;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* आपके डिज़ाइन के अनुसार शेप्स और कलर्स */
+        .anatomy-card {
+            background: linear-gradient(135deg, #7f00ff, #e100ff);
+            border-radius: 12px;
+        }
+
+        .physiology-card {
+            background: linear-gradient(135deg, #ec53f4, #f39cf7);
+            border-radius: 50px; /* Rounded corners जैसा 2.png में है */
+        }
+
+        .lpm-card {
+            background-color: #ff6600;
+            border: 2px solid #002060; /* Dark blue border जैसा इमेज में है */
+            border-radius: 0px; /* एकदम शार्प स्क्वायर */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .home-page h1 { font-size: 2.5rem; }
+            .card-container { flex-direction: column; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="home-page" id="homePage">
+        <h1>DSVCKV LIBRARY</h1>
+        <button class="tour-btn" onclick="showSubjects()">Take a Tour</button>
+    </div>
+
+    <div class="subjects-page" id="subjectsPage">
+        <h2>Select Your Subject</h2>
+        <div class="card-container">
+            <div class="card anatomy-card" onclick="alert('Anatomy Bookshelf जल्द ही आ रहा है!')">
+                Veterinary Anatomy
+            </div>
+            <div class="card physiology-card" onclick="alert('Physiology Bookshelf जल्द ही आ रहा है!')">
+                Veterinary Physiology
+            </div>
+            <div class="card lpm-card" onclick="alert('LPM Bookshelf जल्द ही आ रहा है!')">
+                LPM
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // होम पेज से सब्जेक्ट पेज पर जाने का फंक्शन
+        function showSubjects() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('subjectsPage').style.display = 'flex';
+        }
+    </script>
+
+</body>
+</html>
