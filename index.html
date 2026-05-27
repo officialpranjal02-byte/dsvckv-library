@@ -21,7 +21,6 @@
         .home-page {
             height: 100vh;
             width: 100vw;
-            /* यहाँ आप अपनी लाइब्रेरी वाली इमेज का लिंक डाल सकते हैं */
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1920') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
@@ -59,7 +58,7 @@
 
         /* --- PAGE 2: SUBJECT SELECTION --- */
         .subjects-page {
-            display: none; /* शुरुआत में छुपा रहेगा */
+            display: none;
             min-height: 100vh;
             width: 100vw;
             background-color: #eaeaea;
@@ -104,24 +103,98 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        /* आपके डिज़ाइन के अनुसार शेप्स और कलर्स */
-        .anatomy-card {
-            background: linear-gradient(135deg, #7f00ff, #e100ff);
-            border-radius: 12px;
+        .anatomy-card { background: linear-gradient(135deg, #7f00ff, #e100ff); border-radius: 12px; }
+        .physiology-card { background: linear-gradient(135deg, #ec53f4, #f39cf7); border-radius: 50px; }
+        .lpm-card { background-color: #ff6600; border: 2px solid #002060; border-radius: 0px; }
+
+        /* --- PAGE 3: BOOKSHELF & PYQ PAGE --- */
+        .bookshelf-page {
+            display: none;
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #f0f0f0;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
         }
 
-        .physiology-card {
-            background: linear-gradient(135deg, #ec53f4, #f39cf7);
-            border-radius: 50px; /* Rounded corners जैसा 2.png में है */
+        .bookshelf-page h2 {
+            font-size: 2.2rem;
+            color: #002060;
+            margin-bottom: 30px;
+            text-transform: uppercase;
         }
 
-        .lpm-card {
-            background-color: #ff6600;
-            border: 2px solid #002060; /* Dark blue border जैसा इमेज में है */
-            border-radius: 0px; /* एकदम शार्प स्क्वायर */
+        /* लकड़ी का शेल्फ डिज़ाइन (3.png की तरह) */
+        .shelf-container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #e3c193;
+            border: 8px solid #b58953;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 10px;
         }
 
-        /* Responsive Design */
+        .shelf-row {
+            height: 150px;
+            border-bottom: 12px solid #b58953; /* थिक वुडन रैक */
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 20px 5px 20px;
+        }
+
+        .shelf-row:last-child {
+            border-bottom: none; /* आखिरी रैक के नीचे बॉर्डर नहीं */
+        }
+
+        /* विज़ुअल एलिमेंट्स (किताबें और पीडीएफ) */
+        .shelf-row::before {
+            font-size: 2.5rem;
+            position: absolute;
+            left: 20px;
+            bottom: 5px;
+        }
+        .row-books::before { content: "📚"; }
+        .row-notes::before { content: "📝"; }
+        .row-manuals::before { content: "📑"; }
+        .row-pyqs::before { content: "📜"; } /* PYQ के लिए स्क्रॉल आइकॉन */
+
+        /* रिसोर्स बटन्स */
+        .resource-btn {
+            background-color: white;
+            color: #002060;
+            border: 2px solid #002060;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+            z-index: 10;
+        }
+
+        .resource-btn:hover {
+            background-color: #002060;
+            color: white;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .home-page h1 { font-size: 2.5rem; }
             .card-container { flex-direction: column; gap: 20px; }
@@ -132,29 +205,84 @@
 
     <div class="home-page" id="homePage">
         <h1>DSVCKV LIBRARY</h1>
-        <button class="tour-btn" onclick="showSubjects()">Take a Tour</button>
+        <button class="tour-btn" onclick="navigate('homePage', 'subjectsPage')">Take a Tour</button>
     </div>
 
     <div class="subjects-page" id="subjectsPage">
         <h2>Select Your Subject</h2>
         <div class="card-container">
-            <div class="card anatomy-card" onclick="alert('Anatomy Bookshelf जल्द ही आ रहा है!')">
-                Veterinary Anatomy
+            <div class="card anatomy-card" onclick="openShelf('Veterinary Anatomy')">Veterinary Anatomy</div>
+            <div class="card physiology-card" onclick="openShelf('Veterinary Physiology')">Veterinary Physiology</div>
+            <div class="card lpm-card" onclick="openShelf('Veterinary LPM')">LPM</div>
+        </div>
+        <button class="back-btn" onclick="navigate('subjectsPage', 'homePage')">← Back to Home</button>
+    </div>
+
+    <div class="bookshelf-page" id="bookshelfPage">
+        <h2 id="currentSubjectTitle">Subject Name</h2>
+        
+        <div class="shelf-container">
+            <div class="shelf-row row-books">
+                <div></div>
+                <a href="#" id="bookLink" target="_blank" class="resource-btn">Books →</a>
             </div>
-            <div class="card physiology-card" onclick="alert('Physiology Bookshelf जल्द ही आ रहा है!')">
-                Veterinary Physiology
+            <div class="shelf-row row-notes">
+                <div></div>
+                <a href="#" id="notesLink" target="_blank" class="resource-btn">Notes →</a>
             </div>
-            <div class="card lpm-card" onclick="alert('LPM Bookshelf जल्द ही आ रहा है!')">
-                LPM
+            <div class="shelf-row row-manuals">
+                <div></div>
+                <a href="#" id="manualLink" target="_blank" class="resource-btn">Manuals →</a>
+            </div>
+            <div class="shelf-row row-pyqs">
+                <div></div>
+                <a href="#" id="pyqLink" target="_blank" class="resource-btn">PYQs 📜 →</a>
             </div>
         </div>
+
+        <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage')">← Back to Subjects</button>
     </div>
 
     <script>
-        // होम पेज से सब्जेक्ट पेज पर जाने का फंक्शन
-        function showSubjects() {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('subjectsPage').style.display = 'flex';
+        // कॉमन नेविगेशन फंक्शन
+        function navigate(hideId, showId) {
+            document.getElementById(hideId).style.display = 'none';
+            document.getElementById(showId).style.display = 'flex';
+        }
+
+        // हर सब्जेक्ट के लिए अलग-अलग Google Drive लिंक्स यहाँ डालें
+        const driveLinks = {
+            'Veterinary Anatomy': {
+                book: 'https://drive.google.com/your-anatomy-books-link',
+                notes: 'https://drive.google.com/your-anatomy-notes-link',
+                manual: 'https://drive.google.com/your-anatomy-manuals-link',
+                pyq: 'https://drive.google.com/your-anatomy-pyqs-link'
+            },
+            'Veterinary Physiology': {
+                book: 'https://drive.google.com/your-physiology-books-link',
+                notes: 'https://drive.google.com/your-physiology-notes-link',
+                manual: 'https://drive.google.com/your-physiology-manuals-link',
+                pyq: 'https://drive.google.com/your-physiology-pyqs-link'
+            },
+            'Veterinary LPM': {
+                book: 'https://drive.google.com/your-lpm-books-link',
+                notes: 'https://drive.google.com/your-lpm-notes-link',
+                manual: 'https://drive.google.com/your-lpm-manuals-link',
+                pyq: 'https://drive.google.com/your-lpm-pyqs-link'
+            }
+        };
+
+        // शेल्फ खोलने और सही लिंक सेट करने का फंक्शन
+        function openShelf(subjectName) {
+            document.getElementById('currentSubjectTitle').innerText = subjectName;
+            
+            // लिंक्स को अपडेट करना
+            document.getElementById('bookLink').href = driveLinks[subjectName].book;
+            document.getElementById('notesLink').href = driveLinks[subjectName].notes;
+            document.getElementById('manualLink').href = driveLinks[subjectName].manual;
+            document.getElementById('pyqLink').href = driveLinks[subjectName].pyq;
+
+            navigate('subjectsPage', 'bookshelfPage');
         }
     </script>
 
