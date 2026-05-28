@@ -215,7 +215,7 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- PAGE 5: BOOK SELECTION PAGE --- */
+        /* --- PAGE 5: DYNAMIC BOOK SELECTION PAGE --- */
         .book-page {
             display: none;
             min-height: 100vh;
@@ -339,7 +339,7 @@
         <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
-    <!-- SECTION 5: DYNAMIC BOOK SELECTION PAGE (ANATOMY / LPM) -->
+    <!-- SECTION 5: DYNAMIC BOOK SELECTION PAGE -->
     <div class="book-page" id="bookPage">
         <h2 id="bookPageTitle">Veterinary Books</h2>
         <div class="book-list-container" id="bookListContainer">
@@ -356,14 +356,14 @@
             document.getElementById(showId).style.display = 'flex';
         }
 
+        // SABHI SUBJECTS KE DIRECT LINKS (PHYSIOLOGY NOTES ADDED!)
         const driveLinks = {
             'Veterinary Anatomy': {
                 notes: 'https://drive.google.com/your-anatomy-notes-link',
                 pyq: 'https://drive.google.com/your-anatomy-pyqs-link'
             },
             'Veterinary Physiology': {
-                book: 'https://drive.google.com/your-physiology-books-link',
-                notes: 'https://drive.google.com/your-physiology-notes-link',
+                notes: 'https://drive.google.com/file/d/1JZzRsCM3QiGRoWro8-lPjEzITXPoPnZr/view?usp=drivesdk', // KVASU Notes Here 👍
                 manual: 'https://drive.google.com/your-physiology-manual-link',
                 pyq: 'https://drive.google.com/your-physiology-pyqs-link'
             },
@@ -380,10 +380,15 @@
             { text: 'R.K. Ghosh - Embryology & Histology 🔬', url: 'https://drive.google.com/file/d/1T45uZs9At9O1CABvYFQdH-fyhssWYP8u/view?usp=drivesdk' }
         ];
 
-        // LPM BOOKS ADD HO GAYI HAIN! 👍
+        // LPM BOOKS
         const lpmBooks = [
             { text: 'Thomas & NSR Shastry 🐄', url: 'https://drive.google.com/file/d/1eQaP0If3NGlmNMe5m1__gKAggMd28y1W/view?usp=drivesdk' },
             { text: 'Handbook on Wild and Zoo Animals 🐆', url: 'https://drive.google.com/file/d/1OjQkpp565T4lJ6SXzltlvSgSIUlwigNa/view?usp=drivesdk' }
+        ];
+
+        // PHYSIOLOGY BOOKS (DUKE'S PHYSIOLOGY ADDED!)
+        const physioBooks = [
+            { text: "Duke's Physiology of Domestic Animals 🐎", url: 'https://drive.google.com/file/d/15pYi4cLAgHAl1C1rhQkNiuiMaQYLuhwB/view?usp=drivesdk' }
         ];
 
         const anatomyManuals = {
@@ -407,7 +412,7 @@
             navigate('subjectsPage', 'bookshelfPage');
         }
 
-        // Book बटन पर क्लिक हैंडलर
+        // Book बटन पर क्लिक हैंडलर (अब Physiology को भी हैंडल करता है!)
         function handleBookClick() {
             const container = document.getElementById('bookListContainer');
             container.innerHTML = ''; // Clear previous buttons
@@ -420,8 +425,10 @@
                 document.getElementById('bookPageTitle').innerText = 'Veterinary LPM Books';
                 renderBookButtons(lpmBooks);
                 navigate('bookshelfPage', 'bookPage');
-            } else {
-                window.open(driveLinks[selectedSubject].book, '_blank');
+            } else if (selectedSubject === 'Veterinary Physiology') {
+                document.getElementById('bookPageTitle').innerText = 'Veterinary Physiology Books';
+                renderBookButtons(physioBooks);
+                navigate('bookshelfPage', 'bookPage');
             }
         }
 
@@ -452,3 +459,4 @@
 
 </body>
 </html>
+
