@@ -170,7 +170,7 @@
 
         .resource-btn:hover { background-color: #002060; color: white; }
 
-        /* --- PAGE 4: ANATOMY MANUAL UNIT SELECTION PAGE --- */
+        /* --- PAGE 4: MANUAL UNITS --- */
         .unit-page {
             display: none;
             min-height: 100vh;
@@ -215,7 +215,7 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- PAGE 5: DYNAMIC BOOK SELECTION PAGE --- */
+        /* --- PAGE 5: DYNAMIC BOOKS --- */
         .book-page {
             display: none;
             min-height: 100vh;
@@ -260,7 +260,7 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- PAGE 6: PYQ SELECTION PAGE --- */
+        /* --- PAGE 6: PYQ SELECTION --- */
         .pyq-page {
             display: none;
             min-height: 100vh;
@@ -325,11 +325,13 @@
 </head>
 <body>
 
+    <!-- PAGE 1 -->
     <div class="home-page" id="homePage">
         <h1>DSVCKV LIBRARY</h1>
         <button class="tour-btn" onclick="navigate('homePage', 'subjectsPage')">Take a Tour</button>
     </div>
 
+    <!-- PAGE 2 -->
     <div class="subjects-page" id="subjectsPage">
         <h2>Select Your Subject</h2>
         <div class="card-container">
@@ -340,13 +342,13 @@
         <button class="back-btn" onclick="navigate('subjectsPage', 'homePage')">← Back to Home</button>
     </div>
 
+    <!-- PAGE 3 -->
     <div class="bookshelf-page" id="bookshelfPage">
         <h2 id="currentSubjectTitle">Subject Name</h2>
-        
         <div class="shelf-container">
             <div class="shelf-row row-books">
                 <div></div>
-                <button id="bookBtn" class="resource-btn" onclick="handleBookClick()">Books →</button>
+                <button class="resource-btn" onclick="handleBookClick()">Books →</button>
             </div>
             <div class="shelf-row row-notes">
                 <div></div>
@@ -354,17 +356,17 @@
             </div>
             <div class="shelf-row row-manuals">
                 <div></div>
-                <button id="manualBtn" class="resource-btn" onclick="handleManualClick()">Manuals →</button>
+                <button class="resource-btn" onclick="handleManualClick()">Manuals →</button>
             </div>
             <div class="shelf-row row-pyqs">
                 <div></div>
-                <button id="pyqBtn" class="resource-btn" onclick="handlePyqClick()">PYQs 📜 →</button>
+                <button class="resource-btn" onclick="handlePyqClick()">PYQs 📜 →</button>
             </div>
         </div>
-
         <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage')">← Back to Subjects</button>
     </div>
 
+    <!-- PAGE 4 -->
     <div class="unit-page" id="unitPage">
         <h2>Veterinary Anatomy Manuals</h2>
         <div class="grid-container">
@@ -380,18 +382,18 @@
         <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
+    <!-- PAGE 5 -->
     <div class="book-page" id="bookPage">
         <h2 id="bookPageTitle">Veterinary Books</h2>
-        <div class="book-list-container" id="bookListContainer">
-            </div>
+        <div class="book-list-container" id="bookListContainer"></div>
         <button class="back-btn" onclick="navigate('bookPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
+    <!-- PAGE 6 -->
     <div class="pyq-page" id="pyqPage">
         <h2 id="pyqPageTitle">Previous Year Papers</h2>
-        <div class="pyq-list-container" id="pyqListContainer">
-            </div>
-        <button class="back-btn" id="pyqBackBtn" onclick="handlePyqBackClick()">← Back to Shelf</button>
+        <div class="pyq-list-container" id="pyqListContainer"></div>
+        <button class="back-btn" onclick="handlePyqBackClick()">← Back to Shelf</button>
     </div>
 
     <script>
@@ -399,47 +401,26 @@
         var currentPyqViewState = 'main';
 
         function navigate(hideId, showId) {
-            document.getElementById(hideId).style.display = 'none';
-            document.getElementById(showId).style.display = 'flex';
+            var hideEl = document.getElementById(hideId);
+            var showEl = document.getElementById(showId);
+            if(hideEl && showEl) {
+                hideEl.style.display = 'none';
+                showEl.style.display = 'flex';
+            } else {
+                alert('Navigation Element Missing: ' + hideId + ' or ' + showId);
+            }
         }
 
         var driveLinks = {
-            'Veterinary Anatomy': {
-                notes: 'https://drive.google.com/your-anatomy-notes-link',
-                manual: '#',
-                pyq: '#'
-            },
-            'Veterinary Physiology': {
-                notes: 'https://drive.google.com/file/d/1JZzRsCM3QiGRoWro8-lPjEzITXPoPnZr/view?usp=drivesdk',
-                manual: 'https://drive.google.com/your-physiology-manual-link',
-                pyq: '#'
-            },
-            'Veterinary LPM': {
-                notes: 'https://drive.google.com/your-lpm-notes-link',
-                manual: 'https://drive.google.com/your-lpm-manual-link',
-                pyq: '#'
-            }
+            'Veterinary Anatomy': { notes: '#' },
+            'Veterinary Physiology': { notes: 'https://drive.google.com/file/d/1JZzRsCM3QiGRoWro8-lPjEzITXPoPnZr/view?usp=drivesdk', manual: '#' },
+            'Veterinary LPM': { notes: '#', manual: '#' }
         };
 
         var pyqLinks = {
-            'Veterinary Anatomy': {
-                external: 'https://drive.google.com/anatomy-external-link',
-                internal1: 'https://drive.google.com/anatomy-internal1-link',
-                internal2: 'https://drive.google.com/anatomy-internal2-link',
-                internal3: 'https://drive.google.com/anatomy-internal3-link'
-            },
-            'Veterinary Physiology': {
-                external: 'https://drive.google.com/physiology-external-link',
-                internal1: 'https://drive.google.com/physiology-internal1-link',
-                internal2: 'https://drive.google.com/physiology-internal2-link',
-                internal3: 'https://drive.google.com/physiology-internal3-link'
-            },
-            'Veterinary LPM': {
-                external: 'https://drive.google.com/lpm-external-link',
-                internal1: 'https://drive.google.com/lpm-internal1-link',
-                internal2: 'https://drive.google.com/lpm-internal2-link',
-                internal3: 'https://drive.google.com/lpm-internal3-link'
-            }
+            'Veterinary Anatomy': { external: '#', internal1: '#', internal2: '#', internal3: '#' },
+            'Veterinary Physiology': { external: '#', internal1: '#', internal2: '#', internal3: '#' },
+            'Veterinary LPM': { external: '#', internal1: '#', internal2: '#', internal3: '#' }
         };
 
         var anatomyBooks = [
@@ -460,5 +441,116 @@
             unit1: 'https://drive.google.com/file/d/1NsccZk_EZkEX1OjWVXXTv6cyXMW1IC_n/view?usp=drivesdk',
             unit2: 'https://drive.google.com/file/d/1aSOmRjLGJ3kOlRJBK8OFmMBpqC0QC3t8/view?usp=drivesdk',
             unit3: 'https://drive.google.com/file/d/1sx_p-ZRctXq81XS57jP41q7hiDB94YAS/view?usp=drivesdk',
-            unit4: '
-        
+            unit4: 'https://drive.google.com/file/d/1vKnXdkMsKvvQwzHa4QhhRi1DwobkGnTs/view?usp=drivesdk',
+            unit5: 'https://drive.google.com/file/d/10Xcc2sHKatvNlWN4dnb54_Takf6mRTDA/view?usp=drivesdk',
+            unit6: 'https://drive.google.com/file/d/18l3iAMFcdfE9jNWNKR0lLUJziMegxvEN/view?usp=drivesdk',
+            unit7: 'https://drive.google.com/file/d/1lK7XltxKYNYMvePQiRaIUDt-y5ZhoHe7/view?usp=drivesdk',
+            unit8: 'https://drive.google.com/file/d/1gt9hK5xIQDo3ycz4JSVxoD_SxdZ0AfQJ/view?usp=drivesdk'
+        };
+
+        function openShelf(subjectName) {
+            selectedSubject = subjectName;
+            document.getElementById('currentSubjectTitle').innerText = subjectName;
+            document.getElementById('notesLink').href = driveLinks[subjectName].notes || '#';
+            navigate('subjectsPage', 'bookshelfPage');
+        }
+
+        function handleBookClick() {
+            var container = document.getElementById('bookListContainer');
+            container.innerHTML = ''; 
+            if (selectedSubject === 'Veterinary Anatomy') {
+                document.getElementById('bookPageTitle').innerText = 'Veterinary Anatomy Books';
+                renderBookButtons(anatomyBooks);
+            } else if (selectedSubject === 'Veterinary LPM') {
+                document.getElementById('bookPageTitle').innerText = 'Veterinary LPM Books';
+                renderBookButtons(lpmBooks);
+            } else if (selectedSubject === 'Veterinary Physiology') {
+                document.getElementById('bookPageTitle').innerText = 'Veterinary Physiology Books';
+                renderBookButtons(physioBooks);
+            }
+            navigate('bookshelfPage', 'bookPage');
+        }
+
+        function renderBookButtons(booksArray) {
+            var container = document.getElementById('bookListContainer');
+            booksArray.forEach(function(book) {
+                var btn = document.createElement('a');
+                btn.href = book.url;
+                btn.target = '_blank';
+                btn.className = 'book-btn';
+                btn.innerText = book.text;
+                container.appendChild(btn);
+            });
+        }
+
+        function handleManualClick() {
+            if (selectedSubject === 'Veterinary Anatomy') {
+                for (var i = 1; i <= 8; i++) {
+                    document.getElementById('unit' + i).href = anatomyManuals['unit' + i];
+                }
+                navigate('bookshelfPage', 'unitPage');
+            } else {
+                window.open(driveLinks[selectedSubject].manual || '#', '_blank');
+            }
+        }
+
+        function handlePyqClick() {
+            currentPyqViewState = 'main';
+            document.getElementById('pyqPageTitle').innerText = selectedSubject + ' PYQs';
+            showPyqMainMenu();
+            navigate('bookshelfPage', 'pyqPage');
+        }
+
+        function showPyqMainMenu() {
+            var container = document.getElementById('pyqListContainer');
+            container.innerHTML = '';
+
+            var internalBtn = document.createElement('button');
+            internalBtn.className = 'pyq-btn';
+            internalBtn.innerText = 'Internal Exams 📝';
+            internalBtn.onclick = showInternalMenu;
+
+            var externalBtn = document.createElement('a');
+            externalBtn.className = 'pyq-btn';
+            externalBtn.innerText = 'External (Annual) Exams 📜';
+            externalBtn.href = pyqLinks[selectedSubject].external || '#';
+            externalBtn.target = '_blank';
+
+            container.appendChild(internalBtn);
+            container.appendChild(externalBtn);
+        }
+
+        function showInternalMenu() {
+            currentPyqViewState = 'internal';
+            document.getElementById('pyqPageTitle').innerText = selectedSubject + ' Internal Exams';
+            var container = document.getElementById('pyqListContainer');
+            container.innerHTML = '';
+
+            var internals = [
+                { text: 'First Internal Exam ✏️', url: pyqLinks[selectedSubject].internal1 },
+                { text: 'Second Internal Exam ✏️', url: pyqLinks[selectedSubject].internal2 },
+                { text: 'Third Internal Exam ✏️', url: pyqLinks[selectedSubject].internal3 }
+            ];
+
+            internals.forEach(function(item) {
+                var btn = document.createElement('a');
+                btn.className = 'pyq-btn';
+                btn.innerText = item.text;
+                btn.href = item.url || '#';
+                btn.target = '_blank';
+                container.appendChild(btn);
+            });
+        }
+
+        function handlePyqBackClick() {
+            if (currentPyqViewState === 'internal') {
+                currentPyqViewState = 'main';
+                document.getElementById('pyqPageTitle').innerText = selectedSubject + ' PYQs';
+                showPyqMainMenu();
+            } else {
+                navigate('pyqPage', 'bookshelfPage');
+            }
+        }
+    </script>
+</body>
+</html>
