@@ -107,7 +107,7 @@
         .physiology-card { background: linear-gradient(135deg, #ec53f4, #f39cf7); border-radius: 50px; }
         .lpm-card { background-color: #ff6600; border: 2px solid #002060; border-radius: 0px; }
 
-        /* --- PAGE 3: BOOKSHELF & PYQ PAGE --- */
+        /* --- PAGE 3: BOOKSHELF PAGE --- */
         .bookshelf-page {
             display: none;
             min-height: 100vh;
@@ -125,7 +125,6 @@
             text-transform: uppercase;
         }
 
-        /* लकड़ी का शेल्फ डिज़ाइन (3.png की तरह) */
         .shelf-container {
             width: 100%;
             max-width: 500px;
@@ -137,8 +136,8 @@
         }
 
         .shelf-row {
-            height: 150px;
-            border-bottom: 12px solid #b58953; /* थिक वुडन रैक */
+            height: 130px;
+            border-bottom: 12px solid #b58953;
             position: relative;
             display: flex;
             align-items: flex-end;
@@ -146,23 +145,14 @@
             padding: 0 20px 5px 20px;
         }
 
-        .shelf-row:last-child {
-            border-bottom: none; /* आखिरी रैक के नीचे बॉर्डर नहीं */
-        }
+        .shelf-row:last-child { border-bottom: none; }
 
-        /* विज़ुअल एलिमेंट्स (किताबें और पीडीएफ) */
-        .shelf-row::before {
-            font-size: 2.5rem;
-            position: absolute;
-            left: 20px;
-            bottom: 5px;
-        }
+        .shelf-row::before { font-size: 2.5rem; position: absolute; left: 20px; bottom: 5px; }
         .row-books::before { content: "📚"; }
         .row-notes::before { content: "📝"; }
         .row-manuals::before { content: "📑"; }
-        .row-pyqs::before { content: "📜"; } /* PYQ के लिए स्क्रॉल आइकॉन */
+        .row-pyqs::before { content: "📜"; }
 
-        /* रिसोर्स बटन्स */
         .resource-btn {
             background-color: white;
             color: #002060;
@@ -178,9 +168,51 @@
             z-index: 10;
         }
 
-        .resource-btn:hover {
-            background-color: #002060;
+        .resource-btn:hover { background-color: #002060; color: white; }
+
+        /* --- PAGE 4: UNIT SELECTION PAGE --- */
+        .unit-page {
+            display: none;
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #eaeaea;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .unit-page h2 {
+            font-size: 2.2rem;
+            color: #7f00ff;
+            margin-bottom: 40px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .unit-btn {
+            background: linear-gradient(135deg, #7f00ff, #e100ff);
             color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .unit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
         .back-btn {
@@ -194,10 +226,10 @@
             font-weight: bold;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .home-page h1 { font-size: 2.5rem; }
             .card-container { flex-direction: column; gap: 20px; }
+            .grid-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -232,7 +264,7 @@
             </div>
             <div class="shelf-row row-manuals">
                 <div></div>
-                <a href="#" id="manualLink" target="_blank" class="resource-btn">Manuals →</a>
+                <button id="manualBtn" class="resource-btn" onclick="handleManualClick()">Manuals →</button>
             </div>
             <div class="shelf-row row-pyqs">
                 <div></div>
@@ -240,49 +272,84 @@
             </div>
         </div>
 
-        <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage')">← Back to Subjects</button>
+        <button class="back-btn" onclick="navigate('subjectsPage', 'bookshelfPage')">← Back to Subjects</button>
+    </div>
+
+    <div class="unit-page" id="unitPage">
+        <h2>Veterinary Anatomy Manuals</h2>
+        <div class="grid-container">
+            <a href="#" id="unit1" target="_blank" class="unit-btn">Unit 1</a>
+            <a href="#" id="unit2" target="_blank" class="unit-btn">Unit 2 (Forelimb)</a>
+            <a href="#" id="unit3" target="_blank" class="unit-btn">Unit 3</a>
+            <a href="#" id="unit4" target="_blank" class="unit-btn">Unit 4</a>
+            <a href="#" id="unit5" target="_blank" class="unit-btn">Unit 5</a>
+            <a href="#" id="unit6" target="_blank" class="unit-btn">Unit 6</a>
+            <a href="#" id="unit7" target="_blank" class="unit-btn">Unit 7</a>
+            <a href="#" id="unit8" target="_blank" class="unit-btn">Unit 8</a>
+        </div>
+        <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
     <script>
-        // कॉमन नेविगेशन फंक्शन
+        let selectedSubject = '';
+
         function navigate(hideId, showId) {
             document.getElementById(hideId).style.display = 'none';
             document.getElementById(showId).style.display = 'flex';
         }
 
-        // हर सब्जेक्ट के लिए अलग-अलग Google Drive लिंक्स यहाँ डालें
         const driveLinks = {
             'Veterinary Anatomy': {
                 book: 'https://drive.google.com/your-anatomy-books-link',
                 notes: 'https://drive.google.com/your-anatomy-notes-link',
-                manual: 'https://drive.google.com/your-anatomy-manuals-link',
                 pyq: 'https://drive.google.com/your-anatomy-pyqs-link'
             },
             'Veterinary Physiology': {
                 book: 'https://drive.google.com/your-physiology-books-link',
                 notes: 'https://drive.google.com/your-physiology-notes-link',
-                manual: 'https://drive.google.com/your-physiology-manuals-link',
+                manual: 'https://drive.google.com/your-physiology-manual-link',
                 pyq: 'https://drive.google.com/your-physiology-pyqs-link'
             },
             'Veterinary LPM': {
                 book: 'https://drive.google.com/your-lpm-books-link',
                 notes: 'https://drive.google.com/your-lpm-notes-link',
-                manual: 'https://drive.google.com/your-lpm-manuals-link',
+                manual: 'https://drive.google.com/your-lpm-manual-link',
                 pyq: 'https://drive.google.com/your-lpm-pyqs-link'
             }
         };
 
-        // शेल्फ खोलने और सही लिंक सेट करने का फंक्शन
+        // AAPKE REAL LINKS YAHAN ADD HO GAYE HAIN 👍
+        const anatomyManuals = {
+            unit1: 'https://drive.google.com/file/d/1NsccZk_EZkEX1OjWVXXTv6cyXMW1IC_n/view?usp=drivesdk',
+            unit2: 'https://drive.google.com/file/d/1aSOmRjLGJ3kOlRJBK8OFmMBpqC0QC3t8/view?usp=drivesdk',
+            unit3: 'https://drive.google.com/link-to-unit3',
+            unit4: 'https://drive.google.com/link-to-unit4',
+            unit5: 'https://drive.google.com/link-to-unit5',
+            unit6: 'https://drive.google.com/link-to-unit6',
+            unit7: 'https://drive.google.com/link-to-unit7',
+            unit8: 'https://drive.google.com/link-to-unit8'
+        };
+
         function openShelf(subjectName) {
+            selectedSubject = subjectName;
             document.getElementById('currentSubjectTitle').innerText = subjectName;
             
-            // लिंक्स को अपडेट करना
             document.getElementById('bookLink').href = driveLinks[subjectName].book;
             document.getElementById('notesLink').href = driveLinks[subjectName].notes;
-            document.getElementById('manualLink').href = driveLinks[subjectName].manual;
             document.getElementById('pyqLink').href = driveLinks[subjectName].pyq;
 
             navigate('subjectsPage', 'bookshelfPage');
+        }
+
+        function handleManualClick() {
+            if (selectedSubject === 'Veterinary Anatomy') {
+                for (let i = 1; i <= 8; i++) {
+                    document.getElementById(`unit${i}`).href = anatomyManuals[`unit${i}`];
+                }
+                navigate('bookshelfPage', 'unitPage');
+            } else {
+                window.open(driveLinks[selectedSubject].manual, '_blank');
+            }
         }
     </script>
 
