@@ -215,6 +215,51 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
+        /* --- PAGE 5: BOOK SELECTION PAGE (NEW!) --- */
+        .book-page {
+            display: none;
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #eaeaea;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .book-page h2 {
+            font-size: 2.2rem;
+            color: #b31010;
+            margin-bottom: 40px;
+        }
+
+        .book-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .book-btn {
+            background: linear-gradient(135deg, #b31010, #ff4d4d);
+            color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border: none;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .book-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
         .back-btn {
             margin-top: 30px;
             background-color: #333;
@@ -256,7 +301,7 @@
         <div class="shelf-container">
             <div class="shelf-row row-books">
                 <div></div>
-                <a href="#" id="bookLink" target="_blank" class="resource-btn">Books →</a>
+                <button id="bookBtn" class="resource-btn" onclick="handleBookClick()">Books →</button>
             </div>
             <div class="shelf-row row-notes">
                 <div></div>
@@ -290,6 +335,15 @@
         <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
+    <div class="book-page" id="bookPage">
+        <h2>Veterinary Anatomy Books</h2>
+        <div class="book-list-container">
+            <a href="#" id="grossAnatomyBook" target="_blank" class="book-btn">R.K. Ghosh - Gross Anatomy 📖</a>
+            <a href="#" id="embryoHistBook" target="_blank" class="book-btn">R.K. Ghosh - Embryology & Histology 🔬</a>
+        </div>
+        <button class="back-btn" onclick="navigate('bookPage', 'bookshelfPage')">← Back to Shelf</button>
+    </div>
+
     <script>
         let selectedSubject = '';
 
@@ -300,7 +354,6 @@
 
         const driveLinks = {
             'Veterinary Anatomy': {
-                book: 'https://drive.google.com/your-anatomy-books-link',
                 notes: 'https://drive.google.com/your-anatomy-notes-link',
                 pyq: 'https://drive.google.com/your-anatomy-pyqs-link'
             },
@@ -318,7 +371,12 @@
             }
         };
 
-        // SABHI REAL LINKS PURA SET HO CHUKE HAIN 👍
+        // AAPKE REAL ANATOMY BOOK LINKS YAHAN ADD HO GAYE HAIN 👍
+        const anatomyBooks = {
+            gross: 'https://drive.google.com/file/d/1g0yDNIsS4FF8tRA7emRokP0qwg2oZJSJ/view?usp=drivesdk',
+            embryoHist: 'https://drive.google.com/file/d/1T45uZs9At9O1CABvYFQdH-fyhssWYP8u/view?usp=drivesdk'
+        };
+
         const anatomyManuals = {
             unit1: 'https://drive.google.com/file/d/1NsccZk_EZkEX1OjWVXXTv6cyXMW1IC_n/view?usp=drivesdk',
             unit2: 'https://drive.google.com/file/d/1aSOmRjLGJ3kOlRJBK8OFmMBpqC0QC3t8/view?usp=drivesdk',
@@ -334,13 +392,24 @@
             selectedSubject = subjectName;
             document.getElementById('currentSubjectTitle').innerText = subjectName;
             
-            document.getElementById('bookLink').href = driveLinks[subjectName].book;
             document.getElementById('notesLink').href = driveLinks[subjectName].notes;
             document.getElementById('pyqLink').href = driveLinks[subjectName].pyq;
 
             navigate('subjectsPage', 'bookshelfPage');
         }
 
+        // Book बटन पर क्लिक हैंडलर
+        function handleBookClick() {
+            if (selectedSubject === 'Veterinary Anatomy') {
+                document.getElementById('grossAnatomyBook').href = anatomyBooks.gross;
+                document.getElementById('embryoHistBook').href = anatomyBooks.embryoHist;
+                navigate('bookshelfPage', 'bookPage');
+            } else {
+                window.open(driveLinks[selectedSubject].book, '_blank');
+            }
+        }
+
+        // Manual बटन पर क्लिक हैंडलर
         function handleManualClick() {
             if (selectedSubject === 'Veterinary Anatomy') {
                 for (let i = 1; i <= 8; i++) {
@@ -354,4 +423,5 @@
     </script>
 
 </body>
-</html>
+                </html>
+                
