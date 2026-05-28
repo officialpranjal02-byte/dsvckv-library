@@ -170,7 +170,7 @@
 
         .resource-btn:hover { background-color: #002060; color: white; }
 
-        /* --- PAGE 4: UNIT SELECTION PAGE --- */
+        /* --- PAGE 4: ANATOMY MANUAL UNIT SELECTION PAGE --- */
         .unit-page {
             display: none;
             min-height: 100vh;
@@ -215,7 +215,7 @@
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        /* --- PAGE 5: BOOK SELECTION PAGE (NEW!) --- */
+        /* --- PAGE 5: BOOK SELECTION PAGE --- */
         .book-page {
             display: none;
             min-height: 100vh;
@@ -280,11 +280,13 @@
 </head>
 <body>
 
+    <!-- SECTION 1: HOME PAGE -->
     <div class="home-page" id="homePage">
         <h1>DSVCKV LIBRARY</h1>
         <button class="tour-btn" onclick="navigate('homePage', 'subjectsPage')">Take a Tour</button>
     </div>
 
+    <!-- SECTION 2: SUBJECT SELECTION PAGE -->
     <div class="subjects-page" id="subjectsPage">
         <h2>Select Your Subject</h2>
         <div class="card-container">
@@ -295,6 +297,7 @@
         <button class="back-btn" onclick="navigate('subjectsPage', 'homePage')">← Back to Home</button>
     </div>
 
+    <!-- SECTION 3: BOOKSHELF PAGE -->
     <div class="bookshelf-page" id="bookshelfPage">
         <h2 id="currentSubjectTitle">Subject Name</h2>
         
@@ -320,6 +323,7 @@
         <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage')">← Back to Subjects</button>
     </div>
 
+    <!-- SECTION 4: ANATOMY MANUAL UNIT SELECTION PAGE -->
     <div class="unit-page" id="unitPage">
         <h2>Veterinary Anatomy Manuals</h2>
         <div class="grid-container">
@@ -335,11 +339,11 @@
         <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
+    <!-- SECTION 5: DYNAMIC BOOK SELECTION PAGE (ANATOMY / LPM) -->
     <div class="book-page" id="bookPage">
-        <h2>Veterinary Anatomy Books</h2>
-        <div class="book-list-container">
-            <a href="#" id="grossAnatomyBook" target="_blank" class="book-btn">R.K. Ghosh - Gross Anatomy 📖</a>
-            <a href="#" id="embryoHistBook" target="_blank" class="book-btn">R.K. Ghosh - Embryology & Histology 🔬</a>
+        <h2 id="bookPageTitle">Veterinary Books</h2>
+        <div class="book-list-container" id="bookListContainer">
+            <!-- Dynamic buttons will appear here via JavaScript -->
         </div>
         <button class="back-btn" onclick="navigate('bookPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
@@ -364,18 +368,23 @@
                 pyq: 'https://drive.google.com/your-physiology-pyqs-link'
             },
             'Veterinary LPM': {
-                book: 'https://drive.google.com/your-lpm-books-link',
                 notes: 'https://drive.google.com/your-lpm-notes-link',
                 manual: 'https://drive.google.com/your-lpm-manual-link',
                 pyq: 'https://drive.google.com/your-lpm-pyqs-link'
             }
         };
 
-        // AAPKE REAL ANATOMY BOOK LINKS YAHAN ADD HO GAYE HAIN 👍
-        const anatomyBooks = {
-            gross: 'https://drive.google.com/file/d/1g0yDNIsS4FF8tRA7emRokP0qwg2oZJSJ/view?usp=drivesdk',
-            embryoHist: 'https://drive.google.com/file/d/1T45uZs9At9O1CABvYFQdH-fyhssWYP8u/view?usp=drivesdk'
-        };
+        // ANATOMY BOOKS
+        const anatomyBooks = [
+            { text: 'R.K. Ghosh - Gross Anatomy 📖', url: 'https://drive.google.com/file/d/1g0yDNIsS4FF8tRA7emRokP0qwg2oZJSJ/view?usp=drivesdk' },
+            { text: 'R.K. Ghosh - Embryology & Histology 🔬', url: 'https://drive.google.com/file/d/1T45uZs9At9O1CABvYFQdH-fyhssWYP8u/view?usp=drivesdk' }
+        ];
+
+        // LPM BOOKS ADD HO GAYI HAIN! 👍
+        const lpmBooks = [
+            { text: 'Thomas & NSR Shastry 🐄', url: 'https://drive.google.com/file/d/1eQaP0If3NGlmNMe5m1__gKAggMd28y1W/view?usp=drivesdk' },
+            { text: 'Handbook on Wild and Zoo Animals 🐆', url: 'https://drive.google.com/file/d/1OjQkpp565T4lJ6SXzltlvSgSIUlwigNa/view?usp=drivesdk' }
+        ];
 
         const anatomyManuals = {
             unit1: 'https://drive.google.com/file/d/1NsccZk_EZkEX1OjWVXXTv6cyXMW1IC_n/view?usp=drivesdk',
@@ -392,21 +401,40 @@
             selectedSubject = subjectName;
             document.getElementById('currentSubjectTitle').innerText = subjectName;
             
-            document.getElementById('notesLink').href = driveLinks[subjectName].notes;
-            document.getElementById('pyqLink').href = driveLinks[subjectName].pyq;
+            document.getElementById('notesLink').href = driveLinks[subjectName].notes || '#';
+            document.getElementById('pyqLink').href = driveLinks[subjectName].pyq || '#';
 
             navigate('subjectsPage', 'bookshelfPage');
         }
 
         // Book बटन पर क्लिक हैंडलर
         function handleBookClick() {
+            const container = document.getElementById('bookListContainer');
+            container.innerHTML = ''; // Clear previous buttons
+
             if (selectedSubject === 'Veterinary Anatomy') {
-                document.getElementById('grossAnatomyBook').href = anatomyBooks.gross;
-                document.getElementById('embryoHistBook').href = anatomyBooks.embryoHist;
+                document.getElementById('bookPageTitle').innerText = 'Veterinary Anatomy Books';
+                renderBookButtons(anatomyBooks);
+                navigate('bookshelfPage', 'bookPage');
+            } else if (selectedSubject === 'Veterinary LPM') {
+                document.getElementById('bookPageTitle').innerText = 'Veterinary LPM Books';
+                renderBookButtons(lpmBooks);
                 navigate('bookshelfPage', 'bookPage');
             } else {
                 window.open(driveLinks[selectedSubject].book, '_blank');
             }
+        }
+
+        function renderBookButtons(booksArray) {
+            const container = document.getElementById('bookListContainer');
+            booksArray.forEach(book => {
+                const btn = document.createElement('a');
+                btn.href = book.url;
+                btn.target = '_blank';
+                btn.className = 'book-btn';
+                btn.innerText = book.text;
+                container.appendChild(btn);
+            });
         }
 
         // Manual बटन पर क्लिक हैंडलर
@@ -423,5 +451,4 @@
     </script>
 
 </body>
-                </html>
-                
+</html>
