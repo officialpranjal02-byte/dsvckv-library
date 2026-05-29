@@ -327,7 +327,7 @@
 
     <div class="home-page" id="homePage">
         <h1>DSVCKV LIBRARY</h1>
-        <button class="tour-btn" onclick="navigate('homePage', 'subjectsPage', event)">Take a Tour</button>
+        <button class="tour-btn" onclick="navigate('homePage', 'subjectsPage')">Take a Tour</button>
     </div>
 
     <div class="subjects-page" id="subjectsPage">
@@ -337,7 +337,7 @@
             <div class="card physiology-card" onclick="openShelf('Veterinary Physiology')">Veterinary Physiology</div>
             <div class="card lpm-card" onclick="openShelf('Veterinary LPM')">LPM</div>
         </div>
-        <button class="back-btn" onclick="navigate('subjectsPage', 'homePage', event)">← Back to Home</button>
+        <button class="back-btn" onclick="navigate('subjectsPage', 'homePage')">← Back to Home</button>
     </div>
 
     <div class="bookshelf-page" id="bookshelfPage">
@@ -345,7 +345,7 @@
         <div class="shelf-container">
             <div class="shelf-row row-books">
                 <div></div>
-                <button class="resource-btn" onclick="handleBookClick(event)">Books →</button>
+                <button class="resource-btn" onclick="handleBookClick()">Books →</button>
             </div>
             <div class="shelf-row row-notes">
                 <div></div>
@@ -356,14 +356,14 @@
             </div>
             <div class="shelf-row row-manuals">
                 <div></div>
-                <button class="resource-btn" onclick="handleManualClick(event)">Manuals →</button>
+                <button class="resource-btn" onclick="handleManualClick()">Manuals →</button>
             </div>
             <div class="shelf-row row-pyqs">
                 <div></div>
-                <button class="resource-btn" onclick="handlePyqClick(event)">PYQs 📜 →</button>
+                <button class="resource-btn" onclick="handlePyqClick()">PYQs 📜 →</button>
             </div>
         </div>
-        <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage', event)">← Back to Subjects</button>
+        <button class="back-btn" onclick="navigate('bookshelfPage', 'subjectsPage')">← Back to Subjects</button>
     </div>
 
     <div class="unit-page" id="unitPage">
@@ -378,37 +378,34 @@
             <a href="#" id="unit7" target="_blank" class="unit-btn">Unit 7</a>
             <a href="#" id="unit8" target="_blank" class="unit-btn">Unit 8</a>
         </div>
-        <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage', event)">← Back to Shelf</button>
+        <button class="back-btn" onclick="navigate('unitPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
     <div class="book-page" id="bookPage">
         <h2 id="bookPageTitle">Veterinary Books</h2>
         <div class="book-list-container" id="bookListContainer"></div>
-        <button class="back-btn" onclick="navigate('bookPage', 'bookshelfPage', event)">← Back to Shelf</button>
+        <button class="back-btn" onclick="navigate('bookPage', 'bookshelfPage')">← Back to Shelf</button>
     </div>
 
     <div class="pyq-page" id="pyqPage">
         <h2 id="pyqPageTitle">Previous Year Papers</h2>
         <div class="pyq-list-container" id="pyqListContainer"></div>
-        <button class="back-btn" onclick="handlePyqBackClick(event)">← Back to Shelf</button>
+        <button class="back-btn" onclick="handlePyqBackClick()">← Back to Shelf</button>
     </div>
 
     <script>
         var selectedSubject = '';
         var currentPyqViewState = 'main'; 
 
-        // पूरी तरह से सेफ नेविगेशन फंक्शन
-        function navigate(hideId, showId, e) {
-            if (e && typeof e.preventDefault === 'function') {
-                e.preventDefault();
-            }
+        // एकदम साफ और डायरेक्ट नेविगेशन फंक्शन
+        function navigate(hideId, showId) {
             var hideEl = document.getElementById(hideId);
             var showEl = document.getElementById(showId);
-            if(hideEl && showEl) {
+            if (hideEl && showEl) {
                 hideEl.style.display = 'none';
                 showEl.style.display = 'flex';
             } else {
-                console.log('Error: Element missing ' + hideId + ' or ' + showId);
+                console.log('Missing elements:', hideId, showId);
             }
         }
 
@@ -483,7 +480,7 @@
             navigate('subjectsPage', 'bookshelfPage');
         }
 
-        function handleBookClick(e) {
+        function handleBookClick() {
             var container = document.getElementById('bookListContainer');
             container.innerHTML = ''; 
             if (selectedSubject === 'Veterinary Anatomy') {
@@ -496,7 +493,7 @@
                 document.getElementById('bookPageTitle').innerText = 'Veterinary Physiology Books';
                 renderBookButtons(physioBooks);
             }
-            navigate('bookshelfPage', 'bookPage', e);
+            navigate('bookshelfPage', 'bookPage');
         }
 
         function renderBookButtons(booksArray) {
@@ -511,22 +508,22 @@
             });
         }
 
-        function handleManualClick(e) {
+        function handleManualClick() {
             if (selectedSubject === 'Veterinary Anatomy') {
                 for (var i = 1; i <= 8; i++) {
                     document.getElementById('unit' + i).href = anatomyManuals['unit' + i];
                 }
-                navigate('bookshelfPage', 'unitPage', e);
+                navigate('bookshelfPage', 'unitPage');
             } else {
                 window.open(driveLinks[selectedSubject].manual || '#', '_blank');
             }
         }
 
-        function handlePyqClick(e) {
+        function handlePyqClick() {
             currentPyqViewState = 'main';
             document.getElementById('pyqPageTitle').innerText = selectedSubject + ' PYQs';
             showPyqMainMenu();
-            navigate('bookshelfPage', 'pyqPage', e);
+            navigate('bookshelfPage', 'pyqPage');
         }
 
         function showPyqMainMenu() {
@@ -536,17 +533,21 @@
             var internalBtn = document.createElement('button');
             internalBtn.className = 'pyq-btn';
             internalBtn.innerText = 'Internal Exams 📝';
-            internalBtn.onclick = showInternalMenu;
+            internalBtn.onclick = function() { showInternalMenu(); };
 
             var externalBtn = document.createElement('button');
             externalBtn.className = 'pyq-btn';
             externalBtn.innerText = 'External (Annual) Exams 📜';
-            externalBtn.onclick = showExternalMenu;
+            externalBtn.onclick = function() { showExternalMenu(); };
 
             container.appendChild(internalBtn);
             container.appendChild(externalBtn);
         }
 
-        function showInternalMenu(e) {
+        function showInternalMenu() {
             currentPyqViewState = 'internal';
-            document.getElementById('pyqPageTitle').innerTex
+            document.getElementById('pyqPageTitle').innerText = selectedSubject + ' Internal Exams';
+            var container = document.getElementById('pyqListContainer');
+            container.innerHTML = '';
+
+      
