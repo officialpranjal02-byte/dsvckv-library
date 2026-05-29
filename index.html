@@ -165,7 +165,6 @@
             cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 15px;
-            z-index: 10;
         }
 
         .resource-btn:hover { background-color: #002060; color: white; }
@@ -349,7 +348,7 @@
             </div>
             <div class="shelf-row row-notes">
                 <div></div>
-                <div style="display: flex; gap: 10px; z-index: 10; margin-bottom: 15px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <a href="#" id="notesLink" target="_blank" class="resource-btn">KVASU Notes 📝 →</a>
                     <a href="#" id="kurreNotesLink" target="_blank" class="resource-btn" style="display: none;">Kurre Notes 📝 →</a>
                 </div>
@@ -397,15 +396,13 @@
         var selectedSubject = '';
         var currentPyqViewState = 'main'; 
 
-        // एकदम साफ और डायरेक्ट नेविगेशन फंक्शन
         function navigate(hideId, showId) {
             var hideEl = document.getElementById(hideId);
             var showEl = document.getElementById(showId);
             if (hideEl && showEl) {
                 hideEl.style.display = 'none';
                 showEl.style.display = 'flex';
-            } else {
-                console.log('Missing elements:', hideId, showId);
+                window.scrollTo(0, 0); // नया पेज खुलते ही स्क्रीन ऊपर स्क्रॉल हो जाएगी
             }
         }
 
@@ -550,4 +547,5 @@
             var container = document.getElementById('pyqListContainer');
             container.innerHTML = '';
 
-      
+            var internals = [
+                { text: 'First Internal Exam ✏️', url: pyqLin
